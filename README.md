@@ -13,6 +13,7 @@ Developed as a term project for SEN4015 – Advanced Programming with Python, Ba
 - **Pricing analysis:** free vs. paid games and review scores across price bands.
 - **Trends over time:** number of games released per year.
 - **Game search:** pick any game and see how it compares to other games in its genres (e.g. *"Counter-Strike has a higher review score than 94% of Action games"*).
+- **Review prediction:** a Random Forest model predicts the chance that a new game gets at least 80% positive reviews, using only price, release year and genres. It reaches 62% accuracy on 7,588 test games, compared to a 50% baseline.
 - **Interactive filters:** release year range and minimum review count.
 
 ## Key Findings
@@ -32,10 +33,11 @@ Developed as a term project for SEN4015 – Advanced Programming with Python, Ba
 | `data_loader.py` | `DataLoader` class: reads the raw CSV file |
 | `data_cleaner.py` | `DataCleaner` class: cleans and prepares the data |
 | `game_analyzer.py` | `GameAnalyzer` class: genre, price, year and game comparison analyses |
+| `predictor.py` | `ReviewPredictor` class: trains and evaluates the prediction model |
 | `visualizer.py` | `Visualizer` class: turns analysis results into Plotly charts |
 | `app.py` | Streamlit dashboard |
 | `analyze.py` | Prints the main analysis tables to the terminal |
-| `test_project.py` | 11 pytest tests for the cleaning and analysis logic |
+| `test_project.py` | 12 pytest tests for the cleaning and analysis logic |
 
 ## Dataset
 
