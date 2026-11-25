@@ -50,6 +50,16 @@ class DataCleaner:
     def split_genres(self):
         self.df["Genre List"] = self.df["Genre"].str.split(", ")
 
+    def remove_software(self):
+        software = {
+            "Game Development", "Design & Illustration", "Education",
+            "Animation & Modeling", "Utilities", "Software Training",
+            "Video Production", "Audio Production", "Photo Editing",
+            "Web Publishing", "Accounting",
+        }
+        is_software = self.df["Genre List"].apply(lambda g: any(x in software for x in g))
+        self.df = self.df[~is_software]
+
     def clean(self):
         """Tüm temizlik adımlarını sırayla çalıştırır."""
         self.remove_non_games()
@@ -61,4 +71,5 @@ class DataCleaner:
         self.add_review_metrics()
         self.filter_min_reviews()
         self.split_genres()
+        self.remove_software()
         return self.df.reset_index(drop=True)
