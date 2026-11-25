@@ -59,3 +59,11 @@ class Visualizer:
         fig.update_layout(barmode="group", title=f"{game_name} vs. its genres")
         fig.update_yaxes(tickformat=".0%", range=[0, 1])
         return fig
+
+    def feature_importance(self, importance_df):
+        return px.bar(
+            importance_df.sort_values("Importance"),
+            x="Importance", y="Feature", orientation="h",
+            labels={"Feature": ""},
+            title="What the model looks at most",
+        )

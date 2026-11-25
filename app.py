@@ -4,6 +4,7 @@ from data_loader import DataLoader
 from data_cleaner import DataCleaner
 from game_analyzer import GameAnalyzer
 from visualizer import Visualizer
+from predictor import ReviewPredictor
 
 st.set_page_config(page_title="Steam Game Market Analyzer", layout="wide")
 
@@ -14,8 +15,16 @@ def load_data():
     return DataCleaner(raw).clean()
 
 
+@st.cache_resource
+def train_model(_data):
+    model = ReviewPredictor()
+    model.train(_data)
+    return model
+
+
 df = load_data()
 viz = Visualizer()
+predictor = train_model(df)
 
 st.title("Steam Game Market Analyzer")
 st.caption("What makes a game successful on Steam? Based on the Kaggle dataset "
@@ -39,7 +48,9 @@ c2.metric("Average score", f"{filtered['Review Score'].mean():.0%}")
 c3.metric("Median price", f"${filtered['Price'].median():.2f}")
 c4.metric("Free games", f"{(filtered['Price'] == 0).mean():.0%}")
 
-tab1, tab2, tab3, tab4 = st.tabs(["Genres", "Pricing", "Over time", "Search a game"])
+tab1, tab2, tab3, tab4, tab5 = st.tabs(
+    ["Genres", "Pricing", "Over time", "Search a game", "Predict"]
+)
 
 with tab1:
     genre_df = analyzer.genre_stats(min_games=50)
@@ -80,3 +91,26 @@ with tab4:
                    f"**{best['Better Than (%)']:.0f}%** of {best['Genre']} games.")
         st.plotly_chart(viz.game_vs_genre(comparison, choice), width="stretch")
         st.dataframe(comparison, hide_index=True)
+
+with tab5:
+    st.subheader("Will a new game get positive reviews?")
+    st.write("A Random Forest model predicts the chance that a game gets "
+             "**at least 80% positive reviews**, using only information known "
+             "before release: price, release year and genres.")
+
+    p1, p2 = st.columns(2)
+    price = p1.slider("Price ($)", 0.0, 70.0, 15.0, step=0.5)
+    year = p2.slider("Release year", min_year, max_year, max_year)
+    default_genres = [g for g in ["Indie", "Adventure"] if g in predictor.genres]
+    chosen = st.multiselect("Genres", predictor.genres, default=default_genres)
+
+    if chosen:
+        chance = predictor.predict_proba(price, year, chosen)
+        st.metric("Chance of positive reviews", f"{chance:.0%}")
+    else:
+        st.info("Select at least one genre.")
+
+    r = predictor.results
+    st.caption(f"Model accuracy on {r['test_size']:,} test games: {r['accuracy']:.0%} "
+               f"(always guessing the most common class: {r['baseline']:.0%}).")
+    st.plotly_chart(viz.feature_importance(predictor.feature_importance()), width="stretch")

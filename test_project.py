@@ -98,3 +98,24 @@ def test_compare_to_genre(clean_df):
 
 def test_compare_unknown_game_returns_none(clean_df):
     assert GameAnalyzer(clean_df).compare_to_genre("No Such Game") is None
+
+
+# ---------- ReviewPredictor testi ----------
+
+def test_predictor_returns_probability():
+    import numpy as np
+    from predictor import ReviewPredictor
+
+    rng = np.random.default_rng(0)
+    n = 400
+    df = pd.DataFrame({
+        "Price": rng.choice([0, 9.99, 19.99], n),
+        "Release Year": rng.integers(2010, 2023, n),
+        "Genre List": [["Action"] if i % 2 else ["Indie"] for i in range(n)],
+        "Review Score": rng.random(n),
+    })
+    model = ReviewPredictor()
+    results = model.train(df, min_genre_games=10)
+    chance = model.predict_proba(9.99, 2020, ["Action"])
+    assert 0 <= results["accuracy"] <= 1
+    assert 0 <= chance <= 1
