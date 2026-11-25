@@ -41,7 +41,7 @@ Developed as a term project for SEN4015 – Advanced Programming with Python, Ba
 
 [All 55,000 Games on Steam (November 2022)](https://www.kaggle.com/datasets/tristan581/all-55000-games-on-steam-november-2022) on Kaggle. Collected from the Steam store API and SteamSpy.
 
-The dataset is not included in this repository. Download it from Kaggle and save `steam_games.csv` as `data/games.csv`.
+The raw data is included as `data/games.csv` (the original `steam_games.csv`, unmodified). It was created by tristan581 and is licensed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). All cleaning is done in code, so the original file stays unchanged.
 
 ## How to Run
 
