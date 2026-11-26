@@ -1,3 +1,4 @@
+from pathlib import Path
 import streamlit as st
 
 from data_loader import DataLoader
@@ -11,7 +12,7 @@ st.set_page_config(page_title="Steam Game Market Analyzer", layout="wide")
 
 @st.cache_data
 def load_data():
-    raw = DataLoader("data/games.csv").load()
+    raw = DataLoader(Path(__file__).parent / "data" / "games.csv").load()
     return DataCleaner(raw).clean()
 
 
