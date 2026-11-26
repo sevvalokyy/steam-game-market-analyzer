@@ -1,3 +1,4 @@
+from pathlib import Path
 import pandas as pd
 from data_loader import DataLoader
 from data_cleaner import DataCleaner
@@ -6,7 +7,7 @@ from game_analyzer import GameAnalyzer
 pd.set_option("display.max_columns", None)
 pd.set_option("display.width", 200)
 
-df = DataCleaner(DataLoader("data/games.csv").load()).clean()
+df = DataCleaner(DataLoader(Path(__file__).parent / "data" / "games.csv").load()).clean()
 analyzer = GameAnalyzer(df)
 
 print("\n=== TURLERE GORE ===")

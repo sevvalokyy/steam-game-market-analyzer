@@ -1,3 +1,4 @@
+from pathlib import Path
 import pandas as pd
 from data_loader import DataLoader
 from data_cleaner import DataCleaner
@@ -5,7 +6,7 @@ from data_cleaner import DataCleaner
 pd.set_option("display.max_columns", None)
 pd.set_option("display.width", 200)
 
-raw_df = DataLoader("data/games.csv").load()
+raw_df = DataLoader(Path(__file__).parent / "data" / "games.csv").load()
 clean_df = DataCleaner(raw_df).clean()
 
 print("Ham veri:", raw_df.shape)
